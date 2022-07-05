@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Facts</title>
+        <script
+			  src="https://code.jquery.com/jquery-3.6.0.min.js"
+			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+			  crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+    </head>
+    <body>
+        <a href="./"><div>Home</div></a>
+        <a href="./clock"><div>Clock</div></a>
+        <a href="./clicker"><div>Clicker</div></a>
+        
+        <h1>Enter a string to learn some facts about it</h1>
+        <form>
+            <label for="prompt">Enter text here!</label>
+            <input type="text" id="prompt" name="prompt"></input>
+            <button id="gimme">Gimme Those Facts!</button>
+        </form>
+        <div id="factholder">
+
+        </div>
+        <script>
+            $(function(){
+                $("#gimme").click(function(event){
+                    event.preventDefault();
+                    let text = $("#prompt").val();
+                    console.log(text);
+                    $.get('/facts/' + text,
+                    function(data, status){
+                        var input = $("<p></p>").text("Input: " + data.input);
+                        var length = $("<p></p>").text("Length: " + data.length);
+                        var uppercase = $("<p></p>").text("Uppercase: " + data.uppercase);
+                        $("#factholder").append(input, length, uppercase); 
+                    });
+                });
+            })
+        </script>
+
+    </body>
+</html>

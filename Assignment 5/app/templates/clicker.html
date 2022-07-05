@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Clicker</title>
+        <script
+			  src="https://code.jquery.com/jquery-3.6.0.min.js"
+			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+			  crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+    </head>
+    <body>
+        <h1> You have clicked {{ count }} times (refresh to update)</h1>
+        <button onclick="post" >Click me to increase count!</button>
+        
+        <a href="./"><div>Home</div></a>
+        <a href="./clock"><div>Clock</div></a>
+        <a href="./facts"><div>Facts</div></a>
+        <script>
+            //this jquery code sends a post request to the server when we click the button
+            $(function(){
+                $("button").click(function(){
+                    $.post('clicker');
+                });
+            });
+        </script>
+    </body>
+</html>
