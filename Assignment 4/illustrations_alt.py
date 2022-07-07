@@ -155,7 +155,7 @@ def make_diagram(seq1, seq2, data, index, label="dummy", tracker_arrow=False, ba
     collection = PatchCollection(backer_arrows)
     plt.gca().add_collection(collection)
 
-    plt.savefig(f'./illustrations/{label}.png')
+    plt.savefig(f'./illustrations_alt/{label}.png')
 
     plt.close(fig)
 
@@ -185,6 +185,7 @@ m = len(seq2)
 M = np.zeros(shape=(n+1, m+1, 2), dtype=np.int8)
 arg_max = (0,0)
 max_val = 0
+backer_arrows = []
 
 #matrix filling
 for i in range(1, n+1):
@@ -200,21 +201,19 @@ for i in range(1, n+1):
             max_val = M[i][j][0]
             arg_max = (i,j)
 
-        A = (j,i)
-        ULB = (j-1, i-1)
-        UB = (j, i-1)
-        LB = (j-1, i)
+        ptA = (j,i)
+        ptB = (0,0)
+        if tracker == UL:
+            ptB = (j-1, i-1)
+        elif tracker == U:
+            ptB = (j-1, i)
+        elif tracker == L:
+            ptB = (j, i-1)
         
+        arrow = mpatches.FancyArrowPatch(ptA, ptB, arrowstyle=BACKERSTYLE, color="green")
+        backer_arrows.append(arrow)
 
-        backer_arrows = []
-        
-        arrow1 = mpatches.FancyArrowPatch(A, ULB, arrowstyle=BACKERSTYLE, color="green")
-        arrow2 = mpatches.FancyArrowPatch(A, UB, arrowstyle=BACKERSTYLE, color="green")
-        arrow3 = mpatches.FancyArrowPatch(A, LB, arrowstyle=BACKERSTYLE, color="green")
-        
-        backer_arrows.extend([arrow1, arrow2, arrow3])
-
-        make_diagram(seq1, seq2, data=M[:,:,0], label= f'matrix-filling-{(i,j)}', index=(i, j), tracker_arrow=False, backer_arrows=backer_arrows)
+        make_diagram(seq1, seq2, data=M[:,:,0], label= f'matrix-filling-{(i,j)}', index=(i, j), tracker_arrow=True, backer_arrows=backer_arrows)
 
 #backtracking:
 i, j = arg_max
@@ -224,7 +223,7 @@ match_seq1 = ""
 match_seq2 = ""
 
 while(M[i][j][0] > 0):
-    make_diagram(seq1, seq2, data=M[:,:,0], label=f'backtracking-{(i,j)}', index=(i, j), tracker_arrow=True)
+    make_diagram(seq1, seq2, data=M[:,:,0], label=f'backtracking-{(i,j)}', index=(i, j), tracker_arrow=True, backer_arrows=backer_arrows)
     back_tracker = M[i][j][1]
     if(back_tracker == UL):
         i -= 1

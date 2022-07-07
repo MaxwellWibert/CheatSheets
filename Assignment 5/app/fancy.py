@@ -25,7 +25,7 @@ def clicker():
         return render_template('clicker.html', count=count)
     elif(request.method == 'POST'):
         count += 1
-        return render_template('clicker.html')
+        return "count variable updated"
 
 @app.route('/facts')
 def people():
