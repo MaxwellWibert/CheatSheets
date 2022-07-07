@@ -186,6 +186,8 @@ M = np.zeros(shape=(n+1, m+1, 2), dtype=np.int8)
 arg_max = (0,0)
 max_val = 0
 
+make_diagram(seq1, seq2, data=M[:,:,0], index=(0,0), label="initializing_grid")
+
 #matrix filling
 for i in range(1, n+1):
     for j in range(1, m+1):
