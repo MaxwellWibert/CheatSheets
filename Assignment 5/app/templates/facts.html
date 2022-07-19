@@ -16,7 +16,7 @@
         <h1>Enter a string to learn some facts about it</h1>
         <form>
             <label for="prompt">Enter text here!</label>
-            <input type="text" id="prompt" name="prompt"></input>
+            <input type="text" id="myPrompt" name="prompt"></input>
             <button id="gimme">Gimme Those Facts!</button>
         </form>
         <div id="factholder">
@@ -26,13 +26,12 @@
             $(function(){
                 $("#gimme").click(function(event){
                     event.preventDefault();
-                    let text = $("#prompt").val();
-                    console.log(text);
+                    let text = $("#myPrompt").val();
                     $.get('/facts/' + text,
                     function(data, status){
-                        var input = $("<p></p>").text("Input: " + data.input);
-                        var length = $("<p></p>").text("Length: " + data.length);
-                        var uppercase = $("<p></p>").text("Uppercase: " + data.uppercase);
+                        let input = $("<p></p>").text("Input: " + data.input);
+                        let length = $("<p></p>").text("Length: " + data.length);
+                        let uppercase = $("<p></p>").text("Uppercase: " + data.uppercase);
                         $("#factholder").append(input, length, uppercase); 
                     });
                 });

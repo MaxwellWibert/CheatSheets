@@ -16,9 +16,12 @@
         <a href="./clock"><div>Clock</div></a>
         <a href="./facts"><div>Facts</div></a>
         <script>
-            //this jquery code sends a post request to the server when we click the button
+            // Tells jQuery to begin as soon as the document loads
             $(function(){
+                /* Tells jquery to listen for click event on the button element.
+                When it hears a click event, it calls the function passed into the click method*/
                 $("button").click(function(){
+                    //sends a post request to server's "clicker" path
                     $.post('clicker');
                 });
             });
