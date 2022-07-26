@@ -1,12 +1,9 @@
 from flask import Flask, render_template, url_for, request
-from MySQLdb import _mysql
+import sqlite3
 import datetime
 
-# connects to database
-db = _mysql.connect(host="localhost", db="mydb")
-
-
-db.create_all()
+connection = sqlite3.connect('clicker.db')
+cursor = connection.cursor()
 
 @app.route('/')
 def home():
@@ -25,27 +22,28 @@ def clock():
 
 
 # Creates a counter and adds it to the database
-db.query("""CREATE TABLE Clickers (
+cursor.execute("""CREATE TABLE Clickers (
     ID int NOT NULL AUTO_INCREMENT,
     Name varchar(255) NOT NULL
     Value int,
     PRIMARY KEY (ID)
 )""")
 
-db.query("""INSERT INTO Clickers (Name, Value)
+# GIVE WARNING ON SQL INJECTION
+cursor.execute("""INSERT INTO Clickers (Name, Value)
 VALUES (1, 'myclicker', 0)""")
 
 
 @app.route('/clicker', methods=['GET', 'POST'])
 def clicker():
     if(request.method == 'GET'):
-        db.query("""SELECT value
+        cursor.execute("""SELECT value
         FROM Clickers
         WHERE Name = 'myclicker'""")
         count = db.store_result()
         return render_template('clicker.html', count=count)
     elif(request.method == 'POST'):
-        db.query("""UPDATE Clickers
+        cursor.execute("""UPDATE Clickers
         SET Value = Value + 1
         WHERE Name = 'myclicker'""")
         return "count variable updated"
