@@ -1,17 +1,10 @@
 from flask import Flask, render_template, url_for, request
-from flask_sqlalchemy import SQLAlchemy
+from MySQLdb import _mysql
 import datetime
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
+# connects to database
+db = _mysql.connect(host="localhost", db="mydb")
 
-# creates a Counter table ORM in sqlalchemy
-class Counter(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    value = db.Column(db.Integer, nullable=False)
-    def __repr__(self):
-        return f'<Counter {self.id}, Count: {self.value}>'
 
 db.create_all()
 
@@ -29,30 +22,40 @@ def clock():
     #Renders template using variables
     return render_template('clock.html', date=date, time=time)
 
+
+
 # Creates a counter and adds it to the database
-counter = Counter(value=0)
-db.session.add(counter)
-db.session.commit()
+db.query("""CREATE TABLE Clickers (
+    ID int NOT NULL AUTO_INCREMENT,
+    Name varchar(255) NOT NULL
+    Value int,
+    PRIMARY KEY (ID)
+)""")
+
+db.query("""INSERT INTO Clickers (Name, Value)
+VALUES (1, 'myclicker', 0)""")
+
 
 @app.route('/clicker', methods=['GET', 'POST'])
 def clicker():
-    #gets counter
-    counter = Counter.query.all()[0]
     if(request.method == 'GET'):
-        count = counter.value
+        db.query("""SELECT value
+        FROM Clickers
+        WHERE Name = 'myclicker'""")
+        count = db.store_result()
         return render_template('clicker.html', count=count)
     elif(request.method == 'POST'):
-        counter.value += 1
-        db.session.commit()
-        count = counter.value
+        db.query("""UPDATE Clickers
+        SET Value = Value + 1
+        WHERE Name = 'myclicker'""")
         return "count variable updated"
 
 @app.route('/facts')
-def people():
+def facts_page():
     return render_template('facts.html')
 
 @app.route('/facts/<string:input>')
-def show_person(input):
+def facts_api(input):
     return {
         'input' : input,
         'length': len(input),
