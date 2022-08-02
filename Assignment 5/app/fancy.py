@@ -1,9 +1,14 @@
 from flask import Flask, render_template, url_for, request
 import sqlite3
 import datetime
+import pandas as pd
 
-connection = sqlite3.connect('clicker.db')
+app = Flask(__name__)
+
+connection = sqlite3.connect('clicker.db', check_same_thread=False)
 cursor = connection.cursor()
+
+
 
 @app.route('/')
 def home():
@@ -21,31 +26,21 @@ def clock():
 
 
 
-# Creates a counter and adds it to the database
-cursor.execute("""CREATE TABLE Clickers (
-    ID int NOT NULL AUTO_INCREMENT,
-    Name varchar(255) NOT NULL
-    Value int,
-    PRIMARY KEY (ID)
-)""")
+# Checks to see if Clicks table exists. If not, creates one
+
+cursor.execute("CREATE TABLE IF NOT EXISTS Clicks(id INTEGER, TIME varchar(255) NOT NULL, PRIMARY KEY (ID))")
+
 
 # GIVE WARNING ON SQL INJECTION
-cursor.execute("""INSERT INTO Clickers (Name, Value)
-VALUES (1, 'myclicker', 0)""")
-
 
 @app.route('/clicker', methods=['GET', 'POST'])
 def clicker():
     if(request.method == 'GET'):
-        cursor.execute("""SELECT value
-        FROM Clickers
-        WHERE Name = 'myclicker'""")
-        count = db.store_result()
+        df = pd.read_sql_query("""SELECT * FROM Clicks""", connection)
+        count = len(df.index)
         return render_template('clicker.html', count=count)
     elif(request.method == 'POST'):
-        cursor.execute("""UPDATE Clickers
-        SET Value = Value + 1
-        WHERE Name = 'myclicker'""")
+        cursor.execute("INSERT INTO Clicks(TIME) VALUES('now');")
         return "count variable updated"
 
 @app.route('/facts')
