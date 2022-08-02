@@ -28,7 +28,7 @@ def clock():
 
 # Checks to see if Clicks table exists. If not, creates one
 
-cursor.execute("CREATE TABLE IF NOT EXISTS Clicks(id INTEGER, TIME varchar(255) NOT NULL, PRIMARY KEY (ID))")
+cursor.execute("CREATE TABLE IF NOT EXISTS Clicks(ID INTEGER, TIME varchar(255) NOT NULL, PRIMARY KEY (ID))")
 
 
 # GIVE WARNING ON SQL INJECTION
@@ -37,10 +37,11 @@ cursor.execute("CREATE TABLE IF NOT EXISTS Clicks(id INTEGER, TIME varchar(255) 
 def clicker():
     if(request.method == 'GET'):
         df = pd.read_sql_query("""SELECT * FROM Clicks""", connection)
+        print(df.head())
         count = len(df.index)
         return render_template('clicker.html', count=count)
     elif(request.method == 'POST'):
-        cursor.execute("INSERT INTO Clicks(TIME) VALUES('now');")
+        cursor.execute("INSERT INTO Clicks(TIME) VALUES(unixepoch('now'));")
         return "count variable updated"
 
 @app.route('/facts')
