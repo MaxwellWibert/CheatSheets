@@ -8,8 +8,6 @@ app = Flask(__name__)
 connection = sqlite3.connect('clicker.db', check_same_thread=False)
 cursor = connection.cursor()
 
-
-
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -24,19 +22,13 @@ def clock():
     #Renders template using variables
     return render_template('clock.html', date=date, time=time)
 
-
-
 # Checks to see if Clicks table exists. If not, creates one
-
 cursor.execute("CREATE TABLE IF NOT EXISTS Clicks(ID INTEGER, TIME varchar(255) NOT NULL, PRIMARY KEY (ID))")
-
-
-# GIVE WARNING ON SQL INJECTION
 
 @app.route('/clicker', methods=['GET', 'POST'])
 def clicker():
     if(request.method == 'GET'):
-        df = pd.read_sql_query("""SELECT * FROM Clicks""", connection)
+        df = pd.read_sql_query("SELECT * FROM Clicks", connection)
         print(df.head())
         count = len(df.index)
         return render_template('clicker.html', count=count)
