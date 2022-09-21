@@ -61,6 +61,12 @@ Some of these cells will be Python code examples, some will be terminal commands
 You won't be able to run any of the Python or Jupyter files until after you install Anaconda (later in this tutorial). To view the Markdown files in their full glory, first open the file in VSCode, then click on the markdown preview button in the top right corner (it looks like two rectangles with a magnifying glass)
 ![Markdown Preview Button](./markdown_preview.png).
 
+Being that this repo may be updated as the course progresses, you should regularly run the following command to update your local copy of the repo:
+
+``` bash
+git pull origin main
+```
+
 Now that you know how to clone other people's repos, it's time you learn how to create and manage your own, since you'll need to do just that to submit assignments. 
 
 ## Creating/Managing Repos
